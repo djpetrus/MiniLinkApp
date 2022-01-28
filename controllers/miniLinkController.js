@@ -69,28 +69,14 @@ const miniLinkId = async (req, res, next) => {
     let miniLink = new MiniLink();
     const data = await firestore.collection("miniLinks").get();
     if (data.empty) {
-      res.status(404).send("O MiniLink não existe.");
+      res.status(404).send("Nenhum MiniLink foi localizado.");
     } else {
       data.forEach((doc) => {
-        console.log(doc.data().miniLinkId == req.params.id);
         if (doc.data().miniLinkId == req.params.id) {
           miniLink = doc.data();
         }
       });
       res.send(await gerarMiniLink(miniLink.miniLinkId));
-    }
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
-
-  try {
-    const id = req.params.id;
-    const miniLink = await firestore.collection("miniLinks").doc(id);
-    const data = await miniLink.get();
-    if (!data.exists) {
-      res.status(404).send("O ID do MiniLink não existe.");
-    } else {
-      res.send(data.data());
     }
   } catch (error) {
     res.status(400).send(error.message);
@@ -102,17 +88,17 @@ const miniLink = async (req, res, next) => {
     let miniLink = new MiniLink();
     const data = await firestore.collection("miniLinks").get();
     if (data.empty) {
-      res.status(404).send("O MiniLink não existe.");
+      res.status(404).send("Nenhum MiniLink foi localizado.");
     } else {
       data.forEach((doc) => {
-        console.log(doc.data().miniLinkId == req.params.id);
         if (doc.data().miniLinkId == req.params.id) {
           miniLink = doc.data();
-        } else {
-          res.status(404).send("O MiniLink foi localizado.");
+          res.redirect(miniLink.linkOriginal);
         }
       });
-      res.redirect(miniLink.linkOriginal);
+      if (miniLink.miniLinkId === undefined) {
+        res.status(404).send("O MiniLink não foi localizado.");
+      }
     }
   } catch (error) {
     res.status(400).send(error.message);
@@ -121,6 +107,7 @@ const miniLink = async (req, res, next) => {
 
 const miniLinkData = async (req, res, next) => {
   try {
+    let miniLink = new MiniLink();
     const miniLinks = await firestore.collection("miniLinks");
     const data = await miniLinks.get();
     const miniLinksArray = [];
@@ -129,24 +116,18 @@ const miniLinkData = async (req, res, next) => {
     } else {
       if (await validarData(req.body.dataMiniLink)) {
         data.forEach((doc) => {
-          console.log(doc.data().dataMiniLink);
-          console.log(req.body.dataMiniLink);
           if (doc.data().dataMiniLink == req.body.dataMiniLink) {
-            const miniLink = new MiniLink(
-              doc.id,
-              doc.data().miniLinkId,
-              doc.data().linkOriginal,
-              doc.data().dataMiniLink,
-              doc.data().miniLink
-            );
-            miniLinksArray.push(miniLink);
-          } else {
-            res
-              .status(404)
-              .send("Nenhum MiniLink foi localizado para a data informada.");
+            miniLink = doc.data();
+            miniLinksArray.push(miniLink.miniLink);
           }
         });
-        res.send(miniLinksArray);
+        if (miniLink.miniLinkId === undefined) {
+          res
+            .status(404)
+            .send("Nenhum MiniLink foi localizado para a data informada.");
+        } else {
+          res.send(miniLinksArray);
+        }
       }
     }
   } catch (error) {
@@ -155,7 +136,7 @@ const miniLinkData = async (req, res, next) => {
 };
 
 async function validarUrl(url) {
-  return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
+  return /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi.test(
     url
   );
 }
