@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --detectOpenHandles --forceExit",
+    "install": "npm install -g nodemon",
     "start": "nodemon index.js"
   },
   "keywords": [],
