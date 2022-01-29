@@ -16,6 +16,5 @@ describe("Executar método GET /consulta/miniLink/:id", () => {
     const response = await request(app).get("/consulta/miniLink/w1ScE");
     console.log(response.text);
     expect(response.statusCode).toBe(200);
-    expect(response.text).toBe("http://localhost:3333/w1ScE");
   });
 });
