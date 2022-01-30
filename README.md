@@ -5,7 +5,6 @@ Documentação swagger:<br>
 Header: Content-Type: application/json<br>
 http://localhost:3000/doc<br>
 </br >
-</br >
 Método POST para encurtar um URL e gravar no banco de dados:<br>
 Header: Content-Type: application/json<br>
 http://localhost:3000/novo/miniLink<br>
