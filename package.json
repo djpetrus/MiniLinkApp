@@ -1,15 +1,16 @@
 {
   "name": "minilinkapp",
   "version": "1.0.0",
-  "description": "",
+  "description": "Atividade 3 - Desenvolvimento Back-end para Aplicações Mobile</br > </br > Método POST para encurtar um URL e gravar no banco de dados:<br> Header: Content-Type: application/json<br> http://localhost:3333/novo/miniLink<br> Body: { \"linkOriginal\" : \"https://github.com/\" }<br> </br > Método GET que retorna um URL encurtado (MiniLink) conforme um id.<br > http://localhost:3333/consulta/miniLink/:id<br > Exemplo..: http://localhost:3333/consulta/miniLink/w1ScE<br > Resultado: http://localhost:3333/w1ScE<br > </br > Método POST que retorna todos os URLs encurtados (MiniLinks) em uma data específica.<br > Header: Content-Type: application/json<br> http://localhost:3333/lista/miniLinks/porData<br> Body: { \"dataMiniLink\" : \"27/01/2022\" }<br> </br > Método GET que retorna um URL encurtado (MiniLink) conforme o encurtamento do URL. http://localhost:3333/consulta/miniLink/:id<br > Exemplo..: http://localhost:3333/consulta/miniLink/w1ScE<br > Resultado: http://localhost:3333/w1ScE<br > </br > Método GET que redireciona o URL encurtado (MiniLink) para o URL original; http://localhost:3333/:id<br > Exemplo..: http://localhost:3333/w1ScE<br > Resultado: https://www.google.com/<br > </br >",
   "main": "index.js",
   "scripts": {
     "test": "jest --detectOpenHandles --forceExit",
-    "install": "npm install -g nodemon",
-    "start": "nodemon index.js"
+    "start": "node swagger.js & node index.js",
+    "generate:doc": "jsdoc -r controllers",
+    "swagger-autogen": "node swagger.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Petrus Ribeiro",
   "license": "ISC",
   "dependencies": {
     "base-64": "^1.0.0",
@@ -18,12 +19,28 @@
     "dotenv": "^14.2.0",
     "express": "^4.17.2",
     "firebase": "^8.0.1",
-    "supertest": "^6.2.2"
+    "jsdoc": "^3.6.10",
+    "supertest": "^6.2.2",
+    "swagger": "^0.0.1",
+    "swagger-autogen": "^2.18.8",
+    "swagger-ui-express": "^4.3.0",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@babel/helper-compilation-targets": "^7.16.7",
     "jest": "^27.4.7",
     "nock": "^13.2.2",
     "nodemon": "^2.0.15"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/djpetrus/MiniLinkApp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/djpetrus/MiniLinkApp/issues"
+  },
+  "homepage": "https://github.com/djpetrus/MiniLinkApp#readme"
 }
