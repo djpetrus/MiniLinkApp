@@ -1,6 +1,8 @@
 # MiniLinkApp
 Atividade 3 - Desenvolvimento Back-end para Aplicações Mobile</br >
 </br >
+OBS: O arquivo .env não está disponivel no github, foi enviado por anexo na atividade. (Por motivo de segurança).
+</br >
 Documentação swagger:<br>
 Header: Content-Type: application/json<br>
 http://localhost:3000/doc<br>
