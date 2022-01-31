@@ -9,7 +9,7 @@ const config = require("../config");
  * Gera um código ID aleatório para o Mini Link
  * @returns {String} Retorna o código gerado
  */
-async function gerarMiniLinkId() {
+function gerarMiniLinkId() {
   let id = "";
   const possible =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -23,7 +23,7 @@ async function gerarMiniLinkId() {
  * Gera o URL do Mini Link
  * @returns {String} Retorna o URL do Mini Link
  */
-async function gerarMiniLink(id) {
+function gerarMiniLink(id) {
   return config.url + "/" + id;
 }
 
@@ -31,7 +31,8 @@ async function gerarMiniLink(id) {
  * Validar o URL informado (regex)
  * @returns {Boolean} Retorna true para um URL valido ou false para um URL inválido.
  */
-async function validarUrl(url) {
+function validarUrl(url) {
+  console.log(url);
   return /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi.test(
     url
   );
@@ -52,22 +53,36 @@ async function validarData(testdate) {
  * @returns {String} Retorna texto de sucesso.
  */
 const novoMiniLink = async (req, res, next) => {
+  console.log("1");
   try {
+    console.log("2");
     const id = gerarMiniLinkId();
+    console.log(id);
+    console.log("3");
     if (validarUrl(req.body.linkOriginal)) {
+      console.log(id);
+      console.log(req.body.linkOriginal);
       let miniLink = {
         miniLinkId: id,
         linkOriginal: req.body.linkOriginal,
         dataMiniLink: new Date().toLocaleDateString("pt-BR"),
         miniLink: gerarMiniLink(id),
       };
+      console.log("5");
       await firestore.collection("miniLinks").doc().set(miniLink);
+      console.log("6");
       res.send("MiniLink salvo com sucesso!");
+      console.log("7");
     } else {
+      console.log("8");
       res.status(404).send("Link inválido, informe o endereço completo.");
+      console.log("9");
     }
+    console.log("10");
   } catch (error) {
+    console.log("11");
     res.status(400).send(error.message);
+    console.log("12");
   }
 };
 
