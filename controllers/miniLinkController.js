@@ -32,10 +32,21 @@ function gerarMiniLink(id) {
  * @returns {Boolean} Retorna true para um URL valido ou false para um URL inválido.
  */
 function validarUrl(url) {
-  console.log(url);
   return /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi.test(
     url
   );
+}
+
+/**
+ * Gerar data atual no formato dd/mm/yyyyy
+ * @returns {String} Retorna a data atual no formato dd/mm/yyyy.
+ */
+function dataAtual() {
+  var hoje = new Date();
+  var dia = String(hoje.getDate()).padStart(2, "0");
+  var mes = String(hoje.getMonth() + 1).padStart(2, "0");
+  var ano = hoje.getFullYear();
+  return dia + "/" + mes + "/" + ano;
 }
 
 /**
@@ -53,36 +64,22 @@ async function validarData(testdate) {
  * @returns {String} Retorna texto de sucesso.
  */
 const novoMiniLink = async (req, res, next) => {
-  console.log("1");
   try {
-    console.log("2");
     const id = gerarMiniLinkId();
-    console.log(id);
-    console.log("3");
     if (validarUrl(req.body.linkOriginal)) {
-      console.log(id);
-      console.log(req.body.linkOriginal);
       let miniLink = {
         miniLinkId: id,
         linkOriginal: req.body.linkOriginal,
-        dataMiniLink: new Date().toLocaleDateString("pt-BR"),
+        dataMiniLink: dataAtual(),
         miniLink: gerarMiniLink(id),
       };
-      console.log("5");
       await firestore.collection("miniLinks").doc().set(miniLink);
-      console.log("6");
       res.send("MiniLink salvo com sucesso!");
-      console.log("7");
     } else {
-      console.log("8");
       res.status(404).send("Link inválido, informe o endereço completo.");
-      console.log("9");
     }
-    console.log("10");
   } catch (error) {
-    console.log("11");
     res.status(400).send(error.message);
-    console.log("12");
   }
 };
 
